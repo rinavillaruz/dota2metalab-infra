@@ -1,8 +1,0 @@
-FROM python:3.11-slim
-
-WORKDIR /app
-
-COPY build/requirements-base.txt .
-
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements-base.txt

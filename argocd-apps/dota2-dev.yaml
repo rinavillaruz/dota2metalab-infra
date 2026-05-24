@@ -9,7 +9,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/rinavillaruz/dota2metalab
+    repoURL: https://github.com/rinavillaruz/dota2metalab-infra
     targetRevision: dev
     path: deploy/helm
     helm:
