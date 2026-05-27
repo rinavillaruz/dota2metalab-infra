@@ -8,9 +8,9 @@ image:
   api:
     tag: latest
   fetcher:
-    tag: latest
+    tag: 20260527171116-01430ab
   trainer:
-    tag: latest
+    tag: 20260527171116-01430ab
 
 # MongoDB settings
 mongodb:
