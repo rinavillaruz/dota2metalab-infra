@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fetcher
-          image: {{ .Values.image.repository }}-fetcher:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-fetcher:{{ .Values.image.fetcher.tag }}
           command: ["python", "scripts/store_database.py"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:

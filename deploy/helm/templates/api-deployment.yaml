@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: {{ .Values.image.repository }}-api:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-api:{{ .Values.image.api.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.api.port }}

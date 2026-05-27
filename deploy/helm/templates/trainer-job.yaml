@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: trainer
-          image: {{ .Values.image.repository }}-trainer:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-trainer:{{ .Values.image.trainer.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: MONGO_URI

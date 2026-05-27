@@ -5,8 +5,13 @@ global:
 # Image settings
 image:
   repository: rinavillaruz/dota2metalab
-  tag: latest
   pullPolicy: Always
+  api:
+    tag: latest
+  fetcher:
+    tag: latest
+  trainer:
+    tag: latest
 
 # MongoDB settings
 mongodb:

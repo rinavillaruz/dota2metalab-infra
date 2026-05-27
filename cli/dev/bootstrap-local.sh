@@ -1,16 +1,40 @@
 #!/bin/bash
 
+# Navigate to repo root regardless of where script is called from
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${SCRIPT_DIR}/../.."
+
+# Step -1 — Ensure Kind cluster is running
+echo "🔍 Checking Kind cluster..."
+if ! kind get clusters 2>/dev/null | grep -q "kind"; then
+    echo "🚀 No Kind cluster found, creating..."
+    kind create cluster --config infrastructure/kind/cluster.yaml
+    echo "✅ Kind cluster created!"
+else
+    echo "✅ Kind cluster already running!"
+fi
+
 echo "🚀 Starting ArgoCD deployment..."
 
 # Step 0 — Cleanup any existing ArgoCD
 echo "🧹 Step 0: Cleaning up any existing ArgoCD..."
 helm uninstall argocd --namespace argocd 2>/dev/null || true
-kubectl delete crd \
-    applications.argoproj.io \
-    applicationsets.argoproj.io \
-    appprojects.argoproj.io \
-    --wait=false 2>/dev/null || true
-kubectl delete namespace argocd --ignore-not-found --wait=false 2>/dev/null || true
+
+for crd in applications.argoproj.io applicationsets.argoproj.io appprojects.argoproj.io; do
+    kubectl get "$crd" --all-namespaces -o json 2>/dev/null | \
+        jq -r '.items[] | "\(.metadata.namespace) \(.metadata.name)"' | \
+        while read ns name; do
+            kubectl patch "$crd" "$name" -n "$ns" \
+                --type=json -p='[{"op":"remove","path":"/metadata/finalizers"}]' 2>/dev/null || true
+        done
+    kubectl delete crd "$crd" --wait=true 2>/dev/null || true
+done
+
+kubectl delete namespace argocd --ignore-not-found --wait=true 2>/dev/null || true
+until ! kubectl get namespace argocd &>/dev/null; do
+    echo "  waiting for argocd namespace to terminate..."
+    sleep 2
+done
 echo "✅ Cleanup done!"
 
 # Step 1 — Install ArgoCD via Helm
