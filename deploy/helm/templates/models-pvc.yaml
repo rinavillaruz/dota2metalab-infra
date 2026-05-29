@@ -4,7 +4,7 @@ metadata:
   name: models-pvc
   namespace: {{ .Values.global.namespace }}
   annotations:
-    "argocd.argoproj.io/sync-wave": "0"
+    "argocd.argoproj.io/sync-wave": "3"
 spec:
   accessModes:
     - ReadWriteOnce
