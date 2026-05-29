@@ -34,4 +34,5 @@ models:
     storageClassName: gp2
 
 ingress:
+  enabled: false
   host: 

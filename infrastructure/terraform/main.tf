@@ -100,6 +100,7 @@ module "ebs_csi_irsa" {
     }
 }
 
+# installs the argocd
 resource "helm_release" "argocd" {
   name             = "argocd"
   repository       = "https://argoproj.github.io/argo-helm"
@@ -113,4 +114,22 @@ resource "helm_release" "argocd" {
   values = [file(abspath("${path.module}/../../deploy/argocd/values.yaml"))]
 
   depends_on = [module.eks]
+}
+
+# installs the nginx
+resource "helm_release" "ingress_nginx" {
+  name             = "ingress-nginx"
+  repository       = "https://kubernetes.github.io/ingress-nginx"
+  chart            = "ingress-nginx"
+  namespace        = "ingress-nginx"
+  create_namespace = true
+  wait             = true
+  timeout          = 300
+
+  depends_on = [module.eks]
+}
+
+resource "kubectl_manifest" "argocd_root_app" {
+    yaml_body = file(abspath("${path.module}/../../argocd-apps/root-app.yaml"))
+    depends_on = [ helm_release.argocd ]
 }

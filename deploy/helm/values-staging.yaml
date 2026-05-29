@@ -17,4 +17,5 @@ models:
     size: 2Gi
 
 ingress:
+  enabled: true
   host: staging.dota2metalab.com
