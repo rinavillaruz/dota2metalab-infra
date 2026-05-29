@@ -10,7 +10,7 @@ spec:
 
   source:
     repoURL: https://github.com/rinavillaruz/dota2metalab-infra
-    targetRevision: prod
+    targetRevision: main
     path: deploy/helm
     helm:
       valueFiles:
