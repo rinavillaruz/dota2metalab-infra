@@ -52,9 +52,3 @@ helm upgrade --install $RELEASE_NAME $CHART_PATH  -f $VALUES_FILE \
     --debug
 
 echo "Deployment Complete!"
-
-# kubectl create secret generic argocd-secret \
-#   --namespace argocd \
-#   --from-literal=admin.password=$(python3 -c "import bcrypt; print(bcrypt.hashpw(b'Ada11132020', bcrypt.gensalt(10)).decode())") \
-#   --from-literal=admin.passwordMtime="$(date +%FT%T%Z)" \
-#   --dry-run=client -o yaml | kubectl apply -f -

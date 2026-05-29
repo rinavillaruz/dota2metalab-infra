@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: dota2metalab-api
   namespace: {{ .Values.global.namespace }}
+  annotations:
+    "argocd.argoproj.io/sync-wave": "3"
 spec:
   replicas: {{ .Values.api.replicas }}
   selector:
@@ -17,7 +19,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: {{ .Values.image.repository }}-api:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-api:{{ .Values.image.api.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.api.port }}

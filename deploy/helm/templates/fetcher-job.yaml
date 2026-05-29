@@ -3,13 +3,18 @@ kind: Job
 metadata:
   name: dota2metalab-fetcher
   namespace: {{ .Values.global.namespace }}
+  annotations:
+    "argocd.argoproj.io/sync-wave": "1"
+    "argocd.argoproj.io/hook": "Sync"
+    "argocd.argoproj.io/hook-delete-policy": "HookSucceeded"
+    "argocd.argoproj.io/sync-options": "Replace=true"
 spec:
   backoffLimit: 3 #defaults to 6
   template:
     spec:
       containers:
         - name: fetcher
-          image: {{ .Values.image.repository }}-fetcher:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-fetcher:{{ .Values.image.fetcher.tag }}
           command: ["python", "scripts/store_database.py"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:

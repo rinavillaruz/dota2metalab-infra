@@ -4,9 +4,7 @@ metadata:
   name: mongodb
   namespace: {{ .Values.global.namespace }}
   annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-weight": "0"
-    "helm.sh/hook-delete-policy": before-hook-creation
+    "argocd.argoproj.io/sync-wave": "0"
 spec:
   replicas: {{ .Values.mongodb.replicas }}
   selector:

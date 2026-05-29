@@ -3,13 +3,18 @@ kind: Job
 metadata:
   name: dota2metalab-trainer
   namespace: {{ .Values.global.namespace }}
+  annotations:
+    "argocd.argoproj.io/sync-wave": "2"
+    "argocd.argoproj.io/hook": "Sync"
+    "argocd.argoproj.io/hook-delete-policy": "HookSucceeded"
+    "argocd.argoproj.io/sync-options": "Replace=true"
 spec:
   backoffLimit: 3 #defaults to 6
   template:
     spec:
       containers:
         - name: trainer
-          image: {{ .Values.image.repository }}-trainer:{{ .Values.image.tag }}
+          image: {{ .Values.image.repository }}-trainer:{{ .Values.image.trainer.tag }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: MONGO_URI

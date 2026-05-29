@@ -3,6 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   name: models-pvc
   namespace: {{ .Values.global.namespace }}
+  annotations:
+    "argocd.argoproj.io/sync-wave": "0"
 spec:
   accessModes:
     - ReadWriteOnce

@@ -1,15 +1,25 @@
 # Global settings
 global:
   namespace: dota2metalab-dev
-
+# Image settings — GitHub Actions updates each tag independently
+# Only the image that was rebuilt will have its tag updated
+image:
+  api:
+    tag: 20260527172539-a0fe866
+  fetcher:
+    tag: 20260527172539-a0fe866
+  trainer:
+    tag: 20260527172539-a0fe866
 # MongoDB settings
 mongodb:
   persistence:
     size: 2Gi
-    storageClassName: gp2
-
+    storageClassName: standard
 # Models storage
 models:
   persistence:
     size: 500Mi
-    storageClassName: gp2
+    storageClassName: standard
+
+ingress:
+  host: dev.dota2metalab.com

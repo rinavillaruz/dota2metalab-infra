@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dota2-dev
+  name: dota2-staging
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,16 +10,16 @@ spec:
 
   source:
     repoURL: https://github.com/rinavillaruz/dota2metalab-infra
-    targetRevision: dev
+    targetRevision: staging
     path: deploy/helm
     helm:
       valueFiles:
         - values.yaml
-        - values-dev.yaml
+        - values-staging.yaml
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: dota2metalab-dev
+    namespace: dota2metalab-staging
 
   syncPolicy:
     automated:

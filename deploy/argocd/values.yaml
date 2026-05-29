@@ -4,7 +4,7 @@ configs:
 
 server:
   service:
-    type: LoadBalancer
+    type: ClusterIP
   replicas: 1
   resources:
     requests:
@@ -42,3 +42,12 @@ redis:
     limits:
       cpu: 100m
       memory: 128Mi
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+applicationSet:
+  enabled: false 
