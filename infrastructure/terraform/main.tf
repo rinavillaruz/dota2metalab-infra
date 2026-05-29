@@ -133,3 +133,9 @@ resource "kubectl_manifest" "argocd_root_app" {
     yaml_body = file(abspath("${path.module}/../../argocd-apps/root-app.yaml"))
     depends_on = [ helm_release.argocd ]
 }
+
+resource "kubectl_manifest" "argocd_ingress" {
+  yaml_body = file(abspath("${path.module}/../../deploy/argocd/argocd-ingress.yaml"))
+
+  depends_on = [helm_release.argocd]
+}
