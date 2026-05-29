@@ -4,7 +4,7 @@ metadata:
   name: dota2metalab-fetcher
   namespace: {{ .Values.global.namespace }}
   annotations:
-    "argocd.argoproj.io/sync-wave": "1"
+    "argocd.argoproj.io/sync-wave": "2"
     "argocd.argoproj.io/hook": "Sync"
     "argocd.argoproj.io/hook-delete-policy": "HookSucceeded"
     "argocd.argoproj.io/sync-options": "Replace=true"
