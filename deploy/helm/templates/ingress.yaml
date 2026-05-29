@@ -3,10 +3,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: dota2metalab-ingress
-  namespace:  {{ .Values.global.namespace }}
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  namespace: {{ .Values.global.namespace }}
 spec:
+  ingressClassName: nginx
   rules:
     - host: {{ .Values.ingress.host }}
       http:
@@ -17,5 +16,5 @@ spec:
               service:
                 name: dota2metalab-api
                 port:
-                 number: {{ .Values.api.port }}
+                  number: {{ .Values.api.port }}
 {{- end }}
