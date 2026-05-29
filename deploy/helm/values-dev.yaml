@@ -20,3 +20,6 @@ models:
   persistence:
     size: 500Mi
     storageClassName: standard
+
+ingress:
+  host: dev.dota2metalab.com

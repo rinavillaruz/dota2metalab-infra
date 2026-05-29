@@ -50,4 +50,4 @@ notifications:
   enabled: false
 
 applicationSet:
-  enabled: false   # optional, also saves resources
+  enabled: false 

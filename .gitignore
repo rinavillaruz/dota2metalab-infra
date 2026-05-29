@@ -34,5 +34,7 @@ crash.log
 crash.*.log
 .terraformrc
 terraform.rc
+*.tfstate.lock.info
+*.tfplan
 
 .env

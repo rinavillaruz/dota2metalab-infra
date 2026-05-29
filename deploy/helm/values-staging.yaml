@@ -1,15 +1,15 @@
 # Global settings
 global:
-  namespace: dota2metalab-prod
+  namespace: dota2metalab-staging
 
 # MongoDB settings
 mongodb:
   persistence:
-    size: 20Gi
+    size: 5Gi
 
 # API settings
 api:
-  replicas: 3
+  replicas: 1
 
 # Models storage
 models:
@@ -17,4 +17,4 @@ models:
     size: 2Gi
 
 ingress:
-  host: dota2metalab.com
+  host: staging.dota2metalab.com
