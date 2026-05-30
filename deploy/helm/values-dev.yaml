@@ -5,11 +5,11 @@ global:
 # Only the image that was rebuilt will have its tag updated
 image:
   api:
-    tag: 20260527172539-a0fe866
+    tag: 20260530214910-2706840
   fetcher:
-    tag: 20260527172539-a0fe866
+    tag: 20260530214910-2706840
   trainer:
-    tag: 20260527172539-a0fe866
+    tag: 20260530214910-2706840
 # MongoDB settings
 mongodb:
   persistence:
@@ -20,6 +20,5 @@ models:
   persistence:
     size: 500Mi
     storageClassName: standard
-
 ingress:
   host: dev.dota2metalab.com
