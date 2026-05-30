@@ -25,6 +25,7 @@ Thumbs.db
 *.tfstate.backup
 *.tfstate.*.backup
 terraform.tfvars
+*.tfvars
 *.auto.tfvars
 override.tf
 override.tf.json

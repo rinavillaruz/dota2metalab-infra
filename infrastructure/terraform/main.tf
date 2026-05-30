@@ -2,16 +2,42 @@ provider "aws" {
   region = var.region
 }
 
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
+
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    token                  = data.aws_eks_cluster_auth.cluster.token
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      args = [
+        "eks", "get-token",
+        "--cluster-name", module.eks.cluster_name,
+        "--region",       var.region
+      ]
+    }
   }
 }
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_name
+# Use exec instead of static token to fetch fresh AWS credentials at apply time, avoiding stale token auth errors
+provider "kubectl" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  load_config_file       = false
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    args = [
+      "eks", "get-token",
+      "--cluster-name", module.eks.cluster_name,
+      "--region",       var.region
+    ]
+  }
 }
 
 data "aws_availability_zones" "available" {
@@ -138,4 +164,63 @@ resource "kubectl_manifest" "argocd_ingress" {
   yaml_body = file(abspath("${path.module}/../../deploy/argocd/argocd-ingress.yaml"))
 
   depends_on = [helm_release.argocd]
+}
+
+resource "null_resource" "update_kubeconfig" {
+  triggers = {
+    cluster_name = module.eks.cluster_name
+  }
+
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --name ${module.eks.cluster_name} --region ${var.region}"
+  }
+
+  depends_on = [ module.eks ]
+}
+
+# Cloudflare load balancer
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+  }
+}
+
+data "kubernetes_service_v1" "ingress_nginx" {
+  metadata {
+    name      = "ingress-nginx-controller"
+    namespace = "ingress-nginx"
+  }
+
+  depends_on = [helm_release.ingress_nginx]
+}
+
+resource "cloudflare_record" "root" {
+  zone_id           =   var.cloudflare_zone_id
+  name              =   "@"
+  content           =   data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type              =   "CNAME"
+  proxied           =   true
+  allow_overwrite   =   true
+}
+
+resource "cloudflare_record" "staging" {
+  zone_id           =   var.cloudflare_zone_id
+  name              =   "staging"
+  content           =   data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type              =   "CNAME"
+  proxied           =   true
+  allow_overwrite   =   true
+}
+
+resource "cloudflare_record" "argocd" {
+  zone_id           =   var.cloudflare_zone_id
+  name              =   "argocd"
+  content           =   data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type              =   "CNAME"
+  proxied           =   true
+  allow_overwrite   =   true
 }
