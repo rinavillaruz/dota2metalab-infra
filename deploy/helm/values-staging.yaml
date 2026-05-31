@@ -15,14 +15,12 @@ models:
 ingress:
   enabled: true
   host: staging.dota2metalab.com
-  
 image:
   api:
-    tag: 20260530214910-2706840
+    tag: 20260531115944-d82aff1
   fetcher:
-    tag: 20260530214910-2706840
+    tag: 20260531115944-d82aff1
   trainer:
-    tag: 20260530214910-2706840
-
+    tag: 20260531115944-d82aff1
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
