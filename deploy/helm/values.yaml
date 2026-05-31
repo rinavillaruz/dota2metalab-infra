@@ -39,3 +39,7 @@ ingress:
 
 irsa:
   roleArn: ""
+
+s3:
+  bucket: "dota2metalab-models-643297135135"
+  prefix: "models"

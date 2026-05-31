@@ -4,15 +4,15 @@ metadata:
   name: dota2metalab-trainer
   namespace: {{ .Values.global.namespace }}
   annotations:
-    "argocd.argoproj.io/sync-wave": "3"
+    "argocd.argoproj.io/sync-wave": "2"
     "argocd.argoproj.io/hook": "Sync"
     "argocd.argoproj.io/hook-delete-policy": "HookSucceeded"
     "argocd.argoproj.io/sync-options": "Replace=true"
 spec:
-  backoffLimit: 3 #defaults to 6
+  backoffLimit: 3
   template:
     spec:
-      serviceAccountName: dota2metalab-api
+      serviceAccountName: dota2metalab-trainer
       containers:
         - name: trainer
           image: {{ .Values.image.repository }}-trainer:{{ .Values.image.trainer.tag }}
@@ -20,15 +20,10 @@ spec:
           env:
             - name: MONGO_URI
               value: mongodb://mongodb:{{ .Values.mongodb.port }}
-            - name: MODEL_DIR
-              value: /app/models
             - name: PYTHONPATH
               value: /app
-          volumeMounts:
-            - name: models-storage
-              mountPath: /app/models
-      volumes:
-        - name: models-storage
-          persistentVolumeClaim:
-            claimName: models-pvc
+            - name: S3_BUCKET
+              value: {{ .Values.s3.bucket }}
+            - name: S3_PREFIX
+              value: {{ .Values.s3.prefix }}
       restartPolicy: Never

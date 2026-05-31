@@ -27,12 +27,7 @@ spec:
               value: mongodb://mongodb:{{ .Values.mongodb.port }}
             - name: PYTHONPATH
               value: /app
-            - name: MODEL_DIR
-              value: /app/models
-          volumeMounts:
-            - mountPath: /app/models
-              name: models-storage
-      volumes:
-        - name: models-storage
-          persistentVolumeClaim:
-            claimName: models-pvc
+            - name: S3_BUCKET
+              value: {{ .Values.s3.bucket }}
+            - name: S3_PREFIX
+              value: {{ .Values.s3.prefix }}
