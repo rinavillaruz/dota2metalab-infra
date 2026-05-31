@@ -9,7 +9,7 @@ image:
   fetcher:
     tag: 20260531125020-d82aff1
   trainer:
-    tag: 20260531132925-438adaf
+    tag: 20260531141408-a4cf057
 # MongoDB settings
 mongodb:
   persistence:
