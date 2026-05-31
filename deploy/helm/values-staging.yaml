@@ -19,7 +19,7 @@ image:
   api:
     tag: 20260531141408-a4cf057
   fetcher:
-    tag: 20260531141408-a4cf057
+    tag: 20260531144528-c12038c
   trainer:
     tag: 20260531141408-a4cf057
 irsa:
