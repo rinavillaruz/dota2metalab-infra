@@ -17,10 +17,10 @@ ingress:
   host: staging.dota2metalab.com
 image:
   api:
-    tag: 20260531141408-a4cf057
+    tag: 20260531145424-c12038c
   fetcher:
-    tag: 20260531141408-a4cf057
+    tag: 20260531145424-c12038c
   trainer:
-    tag: 20260531141408-a4cf057
+    tag: 20260531145424-c12038c
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
