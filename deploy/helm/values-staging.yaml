@@ -1,21 +1,24 @@
 # Global settings
 global:
   namespace: dota2metalab-staging
-
 # MongoDB settings
 mongodb:
   persistence:
     size: 5Gi
-
 # API settings
 api:
   replicas: 1
-
 # Models storage
 models:
   persistence:
     size: 2Gi
-
 ingress:
   enabled: true
   host: staging.dota2metalab.com
+image:
+  api:
+    tag: 20260530214910-2706840
+  fetcher:
+    tag: 20260530214910-2706840
+  trainer:
+    tag: 20260530214910-2706840
