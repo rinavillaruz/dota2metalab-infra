@@ -9,7 +9,8 @@ metadata:
     "argocd.argoproj.io/hook-delete-policy": "HookSucceeded"
     "argocd.argoproj.io/sync-options": "Replace=true"
 spec:
-  backoffLimit: 3 #defaults to 6
+  backoffLimit: 3
+  activeDeadlineSeconds: 7200  # 2 hours max
   template:
     spec:
       containers:
