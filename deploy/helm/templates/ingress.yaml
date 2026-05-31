@@ -4,6 +4,10 @@ kind: Ingress
 metadata:
   name: dota2metalab-ingress
   namespace: {{ .Values.global.namespace }}
+  annotations:
+    # Rate limiting — prevent API abuse
+    nginx.ingress.kubernetes.io/limit-rps: "10"           # 10 requests per second per IP
+    nginx.ingress.kubernetes.io/limit-connections: "20"   # max 20 concurrent connections per IP
 spec:
   ingressClassName: nginx
   rules:
