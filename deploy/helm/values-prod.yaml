@@ -20,5 +20,17 @@ ingress:
   enabled: true
   host: dota2metalab.com
 
+image:
+  api:
+    tag: 20260531145424-c12038c
+  fetcher:
+    tag: 20260531145424-c12038c
+  trainer:
+    tag: 20260531145424-c12038c
+
+s3:
+  bucket: "dota2metalab-models-643297135135"
+  prefix: "models/current"
+
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
