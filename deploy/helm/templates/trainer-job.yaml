@@ -26,4 +26,6 @@ spec:
               value: {{ .Values.s3.bucket }}
             - name: S3_PREFIX
               value: {{ .Values.s3.prefix }}
+            - name: API_URL
+              value: http://dota2metalab-api:{{ .Values.api.port }}
       restartPolicy: Never

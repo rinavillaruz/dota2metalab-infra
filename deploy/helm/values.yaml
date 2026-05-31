@@ -42,4 +42,4 @@ irsa:
 
 s3:
   bucket: "dota2metalab-models-643297135135"
-  prefix: "models"
+  prefix: "models/current"
