@@ -23,3 +23,6 @@ models:
 
 ingress:
   host: dev.dota2metalab.com
+
+irsa:
+  roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
