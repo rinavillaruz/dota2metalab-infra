@@ -10,6 +10,7 @@ metadata:
     "argocd.argoproj.io/sync-options": "Replace=true"
 spec:
   backoffLimit: 3
+  activeDeadlineSeconds: 3600  # 1 hour max for training
   template:
     spec:
       serviceAccountName: dota2metalab-trainer
