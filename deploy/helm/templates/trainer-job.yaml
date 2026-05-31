@@ -12,6 +12,7 @@ spec:
   backoffLimit: 3 #defaults to 6
   template:
     spec:
+      serviceAccountName: dota2metalab-api
       containers:
         - name: trainer
           image: {{ .Values.image.repository }}-trainer:{{ .Values.image.trainer.tag }}

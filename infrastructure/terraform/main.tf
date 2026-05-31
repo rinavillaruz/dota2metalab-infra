@@ -224,3 +224,106 @@ resource "cloudflare_record" "argocd" {
   proxied           =   true
   allow_overwrite   =   true
 }
+
+# =============================================================
+# S3 Model Storage
+# Replaces EBS PVC for ML model artifacts.
+# EBS caused WaitForFirstConsumer deadlock on EKS — S3 is the
+# production-grade solution for sharing models across pods/envs.
+# =============================================================
+
+resource "aws_s3_bucket" "models" {
+  bucket = "dota2metalab-models-${data.aws_caller_identity.current.account_id}"
+
+  tags = {
+    Project   = "dota2metalab"
+    ManagedBy = "terraform"
+  }
+}
+
+# Keep full model history — enables rollback to previous model versions
+resource "aws_s3_bucket_versioning" "models" {
+  bucket = aws_s3_bucket.models.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# Encrypt all model artifacts at rest using AES-256
+resource "aws_s3_bucket_server_side_encryption_configuration" "models" {
+  bucket = aws_s3_bucket.models.id
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
+# Block all public access — models are internal assets only
+resource "aws_s3_bucket_public_access_block" "models" {
+  bucket                  = aws_s3_bucket.models.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+# Used to make S3 bucket name globally unique using AWS account ID
+data "aws_caller_identity" "current" {}
+
+# IAM policy granting pods least-privilege access to model bucket only
+# Attached to service account via IRSA — no hardcoded credentials
+resource "aws_iam_policy" "s3_models" {
+  name        = "dota2metalab-s3-models"
+  description = "Allow pods to read/write ML models to S3"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",    # API reads model files
+          "s3:PutObject",    # Trainer writes model files
+          "s3:DeleteObject", # Cleanup old models
+          "s3:ListBucket"    # List available model versions
+        ]
+        Resource = [
+          aws_s3_bucket.models.arn,
+          "${aws_s3_bucket.models.arn}/*"
+        ]
+      }
+    ]
+  })
+}
+
+# IRSA role for pods to access S3 model bucket
+# Allows trainer and API pods to read/write models without hardcoded credentials
+# Create an IAM role that can be assumed by:
+#  - dota2metalab-api service account in any namespace
+#  - dota2metalab-trainer service account in any namespace
+# And attach the S3 models policy to it
+module "s3_models_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.60.0"
+
+  role_name = "dota2metalab-s3-models"
+
+  role_policy_arns = {
+    s3_models = aws_iam_policy.s3_models.arn
+  }
+
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = [
+        "dota2metalab-dev:dota2metalab-api",
+        "dota2metalab-staging:dota2metalab-api",
+        "dota2metalab-prod:dota2metalab-api",
+        "dota2metalab-dev:dota2metalab-trainer",
+        "dota2metalab-staging:dota2metalab-trainer",
+        "dota2metalab-prod:dota2metalab-trainer"
+      ]
+    }
+  }
+}
