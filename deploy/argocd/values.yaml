@@ -51,3 +51,9 @@ notifications:
 
 applicationSet:
   enabled: false 
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilization: 70

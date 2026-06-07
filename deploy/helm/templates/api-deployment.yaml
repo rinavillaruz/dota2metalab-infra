@@ -31,3 +31,10 @@ spec:
               value: {{ .Values.s3.bucket }}
             - name: S3_PREFIX
               value: {{ .Values.s3.prefix }}
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"

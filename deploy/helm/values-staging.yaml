@@ -24,3 +24,9 @@ image:
     tag: 20260607132607-2da2541
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
+
+hpa:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilization: 70

@@ -28,3 +28,9 @@ s3:
   prefix: "models/current"
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilization: 70
