@@ -17,7 +17,7 @@ ingress:
   host: staging.dota2metalab.com
 image:
   api:
-    tag: 20260607152203-c2ea6f0
+    tag: 20260607153507-b799c9b
   fetcher:
     tag: 20260607132607-2da2541
   trainer:
