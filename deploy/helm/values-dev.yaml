@@ -5,7 +5,7 @@ global:
 # Only the image that was rebuilt will have its tag updated
 image:
   api:
-    tag: 20260607153507-b799c9b
+    tag: 20260607155249-acfacd4
   fetcher:
     tag: 20260607132607-2da2541
   trainer:
