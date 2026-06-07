@@ -43,3 +43,9 @@ irsa:
 s3:
   bucket: "dota2metalab-models-643297135135"
   prefix: "models/current"
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilization: 70
