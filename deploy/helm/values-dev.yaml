@@ -7,9 +7,9 @@ image:
   api:
     tag: 20260607110708-ba8f3ba
   fetcher:
-    tag: 20260607123148-9ab6bd8
+    tag: 20260607124018-c025c9d
   trainer:
-    tag: 20260607123148-9ab6bd8
+    tag: 20260607124018-c025c9d
 # MongoDB settings
 mongodb:
   persistence:
