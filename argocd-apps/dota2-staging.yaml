@@ -22,10 +22,10 @@ spec:
     namespace: dota2metalab-staging
 
   syncPolicy:
-    #automated:
-    #  prune: true
-    #  selfHeal: false
-    #  allowEmpty: false
+    automated:
+     prune: true
+     selfHeal: false
+     allowEmpty: false
     syncOptions:
       - CreateNamespace=true
       - PruneLast=true

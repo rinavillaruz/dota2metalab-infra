@@ -1,36 +1,29 @@
 # Global settings
 global:
   namespace: dota2metalab-prod
-
 # MongoDB settings
 mongodb:
   persistence:
     size: 20Gi
-
 # API settings
 api:
   replicas: 3
-
 # Models storage
 models:
   persistence:
     size: 2Gi
-
 ingress:
   enabled: true
   host: dota2metalab.com
-
 image:
   api:
-    tag: 20260531145424-c12038c
+    tag: 20260607150301-bc11d7c
   fetcher:
-    tag: 20260531145424-c12038c
+    tag: 20260607130012-f98a865
   trainer:
-    tag: 20260531145424-c12038c
-
+    tag: 20260607130012-f98a865
 s3:
   bucket: "dota2metalab-models-643297135135"
   prefix: "models/current"
-
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"

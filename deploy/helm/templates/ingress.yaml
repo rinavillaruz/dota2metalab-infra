@@ -6,8 +6,16 @@ metadata:
   namespace: {{ .Values.global.namespace }}
   annotations:
     # Rate limiting — prevent API abuse
-    nginx.ingress.kubernetes.io/limit-rps: "10"           # 10 requests per second per IP
-    nginx.ingress.kubernetes.io/limit-connections: "20"   # max 20 concurrent connections per IP
+    nginx.ingress.kubernetes.io/limit-rps: "10" # 10 requests per second per IP
+    nginx.ingress.kubernetes.io/limit-connections: "20" # max 20 concurrent connections per IP
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      add_header X-Frame-Options "SAMEORIGIN" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:;" always;
+      add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+      add_header Cross-Origin-Embedder-Policy "require-corp" always;
+      add_header Cross-Origin-Opener-Policy "same-origin" always;
+      add_header Cross-Origin-Resource-Policy "same-origin" always;
 spec:
   ingressClassName: nginx
   rules:
