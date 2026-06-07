@@ -152,6 +152,11 @@ resource "helm_release" "ingress_nginx" {
   wait             = true
   timeout          = 300
 
+  set {
+    name  = "controller.config.allow-snippet-annotations"
+    value = "true"
+  }
+  
   depends_on = [module.eks]
 }
 
