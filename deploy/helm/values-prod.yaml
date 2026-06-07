@@ -18,7 +18,7 @@ ingress:
 
 image:
   api:
-    tag: 20260607153507-b799c9b
+    tag: 20260607160926-bddbf9d
   fetcher:
     tag: 20260607130012-f98a865
   trainer:
