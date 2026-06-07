@@ -9,13 +9,13 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: dota2metalab-api
-minReplicas: {{ .Values.hpa.minReplicas }}
-maxReplicas: {{ .Values.hpa.maxReplicas }}
-metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: {{ .Values.hpa.targetCPUUtilization }}
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetCPUUtilization }}
 {{- end }}
