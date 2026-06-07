@@ -156,6 +156,11 @@ resource "helm_release" "ingress_nginx" {
     name  = "controller.config.allow-snippet-annotations"
     value = "true"
   }
+
+  set {
+    name  = "controller.admissionWebhooks.enabled"
+    value = "false" # disable the webhook that's blocking snippets
+  }
   
   depends_on = [module.eks]
 }
