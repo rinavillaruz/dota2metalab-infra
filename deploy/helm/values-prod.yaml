@@ -8,6 +8,13 @@ mongodb:
 # API settings
 api:
   replicas: 3
+  resources:
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
 # Models storage
 models:
   persistence:
