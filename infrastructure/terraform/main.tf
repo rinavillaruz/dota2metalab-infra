@@ -92,9 +92,14 @@ module "eks" {
         main = {
             instance_types = [var.node_instance_type]
             min_size       = 1
-            max_size       = 3
+            max_size       = 4
             desired_size   = var.node_count
             capacity_type  = "ON_DEMAND"
+        }
+
+        tags = {
+            "k8s.io/cluster-autoscaler/enabled"                    = "true"
+            "k8s.io/cluster-autoscaler/${var.cluster_name}"        = "owned"
         }
     }
 
@@ -336,4 +341,96 @@ module "s3_models_irsa" {
       ]
     }
   }
+}
+
+# Metrics server
+resource "helm_release" "metrics_server" {
+  name = "metrics-server"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
+  chart = "metrics-server"
+  namespace = "kube-system"
+
+  set {
+    name = "args[0]"
+    value = "--kubelet-insecure-tls"
+  }
+
+  depends_on = [module.eks]
+}
+
+# CLuster Autoscaler
+# IAM policy for Cluster Autoscaler
+resource "aws_iam_policy" "cluster_autoscaler" {
+  name        = "dota2metalab-cluster-autoscaler"
+  description = "Policy for Cluster Autoscaler to manage EC2 nodes"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeScalingActivities",
+          "autoscaling:DescribeTags",
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:DescribeInstanceTypes"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# IRSA role for Cluster Autoscaler
+module "cluster_autoscaler_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "5.60.0"
+
+  role_name = "dota2metalab-cluster-autoscaler"
+
+  role_policy_arns = {
+    cluster_autoscaler = aws_iam_policy.cluster_autoscaler.arn
+  }
+
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["kube-system:cluster-autoscaler"]
+    }
+  }
+}
+
+# Install Cluster Autoscaler via Helm
+resource "helm_release" "cluster_autoscaler" {
+  name       = "cluster-autoscaler"
+  repository = "https://kubernetes.github.io/autoscaler"
+  chart      = "cluster-autoscaler"
+  namespace  = "kube-system"
+
+  set {
+    name  = "autoDiscovery.clusterName"
+    value = module.eks.cluster_name
+  }
+
+  set {
+    name  = "awsRegion"
+    value = "us-east-1"
+  }
+
+  set {
+    name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+    value = module.cluster_autoscaler_irsa.iam_role_arn
+  }
+
+  set {
+    name  = "rbac.serviceAccount.name"
+    value = "cluster-autoscaler"
+  }
+
+  depends_on = [module.eks]
 }
