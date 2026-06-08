@@ -28,5 +28,5 @@ irsa:
 hpa:
   enabled: true
   minReplicas: 1
-  maxReplicas: 20
+  maxReplicas: 3
   targetCPUUtilization: 70
