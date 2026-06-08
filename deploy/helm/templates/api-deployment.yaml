@@ -10,8 +10,6 @@ spec:
       app: dota2metalab-api
   template:
     metadata:
-      annotations:
-        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         app: dota2metalab-api
     spec:
