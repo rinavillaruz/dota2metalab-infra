@@ -33,8 +33,8 @@ spec:
               value: {{ .Values.s3.prefix }}
           resources:
             requests:
-              cpu: "250m"
+              cpu: "1500m"
               memory: "512Mi"
             limits:
-              cpu: "500m"
+              cpu: "200m"
               memory: "1Gi"
