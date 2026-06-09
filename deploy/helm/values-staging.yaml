@@ -26,9 +26,9 @@ image:
   api:
     tag: 20260609074140-f132385
   fetcher:
-    tag: 20260607132607-2da2541
+    tag: 20260609080107-c56a19e
   trainer:
-    tag: 20260607132607-2da2541
+    tag: 20260609080107-c56a19e
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
 hpa:
