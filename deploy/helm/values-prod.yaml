@@ -22,10 +22,9 @@ models:
 ingress:
   enabled: true
   host: dota2metalab.com
-
 image:
   api:
-    tag: 20260607173352-9967544
+    tag: 20260609063630-19f88a9
   fetcher:
     tag: 20260607130012-f98a865
   trainer:
@@ -35,7 +34,6 @@ s3:
   prefix: "models/current"
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
-
 hpa:
   enabled: true
   minReplicas: 2
