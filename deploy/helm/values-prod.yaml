@@ -24,7 +24,7 @@ ingress:
   host: dota2metalab.com
 image:
   api:
-    tag: 20260609071410-e7c8b09
+    tag: 20260609072234-4ea4738
   fetcher:
     tag: 20260607130012-f98a865
   trainer:
