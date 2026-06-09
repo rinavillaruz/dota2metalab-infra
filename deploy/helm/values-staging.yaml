@@ -29,6 +29,10 @@ image:
     tag: 20260609080107-c56a19e
   trainer:
     tag: 20260609080107-c56a19e
+s3:
+  bucket: "dota2metalab-models-643297135135"
+  prefix: "models/current"
+
 irsa:
   roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
 hpa:
