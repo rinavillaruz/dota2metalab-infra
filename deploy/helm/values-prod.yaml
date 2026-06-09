@@ -26,9 +26,9 @@ image:
   api:
     tag: 20260609074140-f132385
   fetcher:
-    tag: 20260607130012-f98a865
+    tag: 20260609080107-c56a19e
   trainer:
-    tag: 20260607130012-f98a865
+    tag: 20260609080107-c56a19e
 s3:
   bucket: "dota2metalab-models-643297135135"
   prefix: "models/current"
