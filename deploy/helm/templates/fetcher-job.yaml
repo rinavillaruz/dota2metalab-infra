@@ -7,7 +7,7 @@ metadata:
     "argocd.argoproj.io/sync-wave": "2"
     "argocd.argoproj.io/hook": "Sync"
     "argocd.argoproj.io/hook-delete-policy": "BeforeHookCreation"
-    "argocd.argoproj.io/sync-options": "Replace=true"
+    "argocd.argoproj.io/sync-options": "Replace=true,Force=true"
 spec:
   backoffLimit: 3
   activeDeadlineSeconds: 7200  # 2 hours max
