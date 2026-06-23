@@ -5,11 +5,11 @@ global:
 # Only the image that was rebuilt will have its tag updated
 image:
   api:
-    tag: 20260609074140-f132385
+    tag: 20260623082847-be41576
   fetcher:
-    tag: 20260609080107-c56a19e
+    tag: 20260623082847-be41576
   trainer:
-    tag: 20260609080107-c56a19e
+    tag: 20260623082847-be41576
 # MongoDB settings
 mongodb:
   persistence:
