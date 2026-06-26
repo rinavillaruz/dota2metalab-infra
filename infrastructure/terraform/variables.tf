@@ -34,3 +34,14 @@ variable "cloudflare_api_token" {
 variable "cloudflare_zone_id" {
   type = string
 }
+
+variable "argocd_host" {
+  description = "ArgoCD server host"
+  type        = string
+}
+
+variable "argocd_password" {
+  description = "ArgoCD admin password"
+  type        = string
+  sensitive   = true
+}
