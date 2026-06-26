@@ -434,19 +434,3 @@ resource "helm_release" "cluster_autoscaler" {
 
   depends_on = [module.eks]
 }
-
-resource "null_resource" "argocd_sync" {
-  depends_on = [helm_release.cluster_autoscaler]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      argocd login ${var.argocd_host} \
-        --username admin \
-        --password ${var.argocd_password} \
-        --insecure --grpc-web
-
-      argocd app sync dota2metalab-prod --force
-      argocd app wait dota2metalab-prod --health --timeout 600
-    EOT
-  }
-}
