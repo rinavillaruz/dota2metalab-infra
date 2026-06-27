@@ -492,3 +492,22 @@ resource "aws_budgets_budget" "monthly" {
     subscriber_sns_topic_arns  = [aws_sns_topic.budget_alerts.arn]
   }
 }
+
+resource "kubectl_manifest" "gp3_storage_class" {
+  yaml_body = <<YAML
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+YAML
+
+  depends_on = [module.eks]
+}
