@@ -7,7 +7,7 @@ mongodb:
     size: 20Gi
 # API settings
 api:
-  replicas: 3
+  replicas: 1
   resources:
     requests:
       cpu: "250m"
