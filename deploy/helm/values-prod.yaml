@@ -24,11 +24,11 @@ ingress:
   host: dota2metalab.com
 image:
   api:
-    tag: 20260626074841-200579f
+    tag: 20260627191321-7713f60
   fetcher:
-    tag: 20260626074841-200579f
+    tag: 20260627191321-7713f60
   trainer:
-    tag: 20260626074841-200579f
+    tag: 20260627191321-7713f60
 s3:
   bucket: "dota2metalab-models-643297135135"
   prefix: "models/current"
