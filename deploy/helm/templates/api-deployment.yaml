@@ -6,6 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
 spec:
+  progressDeadlineSeconds: 1200
   replicas: {{ .Values.api.replicas }}
   selector:
     matchLabels:
