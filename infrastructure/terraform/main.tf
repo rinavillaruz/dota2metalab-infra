@@ -69,14 +69,16 @@ module "vpc" {
     }
 
     tags = {
-        Project   = "dota2metalab"
-        ManagedBy = "terraform"
+        Project     = "dota2metalab"
+        ManagedBy   = "terraform"
+        Environment = "shared"
+        Team        = "personal"
     }
 }
 
 module "eks" {
     source = "terraform-aws-modules/eks/aws"
-    version = "~> 20.0"
+    version = "~> 20.31"
 
     cluster_name    = var.cluster_name
     cluster_version = var.cluster_version
@@ -95,11 +97,12 @@ module "eks" {
             max_size       = 4
             desired_size   = var.node_count
             capacity_type  = "ON_DEMAND"
-        }
 
-        tags = {
+
+            tags = {
             "k8s.io/cluster-autoscaler/enabled"                    = "true"
             "k8s.io/cluster-autoscaler/${var.cluster_name}"        = "owned"
+            }
         }
     }
 
@@ -111,8 +114,10 @@ module "eks" {
     }
 
     tags = {
-        Project   = "dota2metalab"
-        ManagedBy = "terraform"
+        Project     = "dota2metalab"
+        ManagedBy   = "terraform"
+        Environment = "shared"
+        Team        = "personal"
     }
 }
 
@@ -252,9 +257,11 @@ resource "aws_s3_bucket" "models" {
   force_destroy = true
 
   tags = {
-    Project   = "dota2metalab"
-    ManagedBy = "terraform"
-  }
+        Project     = "dota2metalab"
+        ManagedBy   = "terraform"
+        Environment = "shared"
+        Team        = "personal"
+    }
 }
 
 # Keep full model history — enables rollback to previous model versions
@@ -311,6 +318,13 @@ resource "aws_iam_policy" "s3_models" {
       }
     ]
   })
+
+  tags = {
+      Project     = "dota2metalab"
+      ManagedBy   = "terraform"
+      Environment = "shared"
+      Team        = "personal"
+  }
 }
 
 # IRSA role for pods to access S3 model bucket
@@ -385,6 +399,13 @@ resource "aws_iam_policy" "cluster_autoscaler" {
       }
     ]
   })
+
+  tags = {
+      Project     = "dota2metalab"
+      ManagedBy   = "terraform"
+      Environment = "shared"
+      Team        = "personal"
+  }
 }
 
 # IRSA role for Cluster Autoscaler
@@ -434,4 +455,40 @@ resource "helm_release" "cluster_autoscaler" {
   }
 
   depends_on = [module.eks]
+}
+
+resource "aws_sns_topic" "budget_alerts" {
+  name = "dota2metalab-budget-alerts"
+
+  tags = {
+    Project     = "dota2metalab"
+    ManagedBy   = "terraform"
+    Environment = "shared"
+    Team        = "personal"
+  }
+}
+
+resource "aws_budgets_budget" "monthly" {
+  name         = "monthly-total"
+  budget_type  = "COST"
+  limit_amount = "50"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = ["sellers_08afoot@icloud.com"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = ["sellers_08afoot@icloud.com"]
+    subscriber_sns_topic_arns  = [aws_sns_topic.budget_alerts.arn]
+  }
 }
