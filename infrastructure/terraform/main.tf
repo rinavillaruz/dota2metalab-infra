@@ -249,6 +249,7 @@ resource "cloudflare_record" "argocd" {
 
 resource "aws_s3_bucket" "models" {
   bucket = "dota2metalab-models-${data.aws_caller_identity.current.account_id}"
+  force_destroy = true
 
   tags = {
     Project   = "dota2metalab"
@@ -433,33 +434,4 @@ resource "helm_release" "cluster_autoscaler" {
   }
 
   depends_on = [module.eks]
-}
-
-resource "null_resource" "argocd_sync" {
-  depends_on = [
-    kubectl_manifest.argocd_root_app,
-    helm_release.cluster_autoscaler
-  ]
-
-  provisioner "local-exec" {
-    command = <<EOT
-      echo "Waiting for ArgoCD to be ready..."
-      kubectl wait --for=condition=available deployment/argocd-server -n argocd --timeout=120s
-
-      ARGOCD_PASSWORD=$(kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath='{.data.password}' | base64 -d)
-
-      argocd login argocd.dota2metalab.com \
-        --username admin \
-        --password $ARGOCD_PASSWORD \
-        --insecure --grpc-web
-
-      echo "Syncing staging..."
-      argocd app sync dota2metalab-staging --force
-      argocd app wait dota2metalab-staging --health --timeout 600
-
-      echo "Syncing prod..."
-      argocd app sync dota2metalab-prod --force
-      argocd app wait dota2metalab-prod --health --timeout 600
-    EOT
-  }
 }
