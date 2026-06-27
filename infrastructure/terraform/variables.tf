@@ -13,12 +13,12 @@ variable "cluster_name" {
 variable "cluster_version" {
   description = "Kubernetes version"
   type        = string
-  default     = "1.32"
+  default     = "1.34"
 }
 
 variable "node_instance_type" {
   type    = string
-  default = "t3.small"
+  default = "t3.medium"
 }
 
 variable "node_count" {
