@@ -42,7 +42,7 @@ spec:
               memory: {{ .Values.api.resources.limits.memory | quote }}
           livenessProbe:
             httpGet:
-              path: /health
+              path: /ping
               port: {{ .Values.api.port }}
             initialDelaySeconds: 300
             periodSeconds: 10
