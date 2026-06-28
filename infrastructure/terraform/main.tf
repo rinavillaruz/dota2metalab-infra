@@ -500,7 +500,7 @@ kind: StorageClass
 metadata:
   name: gp3
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "0"
 provisioner: ebs.csi.aws.com
 parameters:
   type: gp3

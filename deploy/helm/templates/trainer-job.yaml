@@ -4,7 +4,7 @@ metadata:
   name: dota2metalab-trainer
   namespace: {{ .Values.global.namespace }}
   annotations:
-    "argocd.argoproj.io/sync-wave": "3"
+    "argocd.argoproj.io/sync-wave": "4"
     "argocd.argoproj.io/hook": "Sync"
     "argocd.argoproj.io/hook-delete-policy": "BeforeHookCreation"
     "argocd.argoproj.io/sync-options": "Replace=true,Force=true"
