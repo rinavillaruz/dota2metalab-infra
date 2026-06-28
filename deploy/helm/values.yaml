@@ -35,7 +35,7 @@ irsa:
   roleArn: ""
 
 s3:
-  bucket: "dota2metalab-models-643297135135"
+  bucket: "dota2metalab-models-400024183706"
   prefix: "models/current"
 
 hpa:

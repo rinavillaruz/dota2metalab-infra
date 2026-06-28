@@ -30,10 +30,10 @@ image:
   trainer:
     tag: 20260627191321-7713f60
 s3:
-  bucket: "dota2metalab-models-643297135135"
-  prefix: "models/current"
+  bucket: "dota2metalab-models-400024183706"
+  prefix: "models/staging"
 irsa:
-  roleArn: "arn:aws:iam::643297135135:role/dota2metalab-s3-models"
+  roleArn: "arn:aws:iam::400024183706:role/dota2metalab-s3-models"
 hpa:
   enabled: true
   minReplicas: 1
