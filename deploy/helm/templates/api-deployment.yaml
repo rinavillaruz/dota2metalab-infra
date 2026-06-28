@@ -45,13 +45,13 @@ spec:
             httpGet:
               path: /ping
               port: {{ .Values.api.port }}
-            initialDelaySeconds: 300
+            initialDelaySeconds: 30
             periodSeconds: 10
             failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /health
               port: {{ .Values.api.port }}
-            initialDelaySeconds: 300
+            initialDelaySeconds: 30
             periodSeconds: 5
             failureThreshold: 3
