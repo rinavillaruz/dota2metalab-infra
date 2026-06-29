@@ -511,3 +511,49 @@ YAML
 
   depends_on = [module.eks]
 }
+
+resource "helm_release" "prometheus" {
+  name             = "prometheus"
+  repository       = "https://prometheus-community.github.io/helm-charts"
+  chart            = "kube-prometheus-stack"
+  namespace        = "monitoring"
+  create_namespace = true
+  wait             = true
+  timeout          = 300
+
+  values = [
+    file(abspath("${path.module}/../../deploy/prometheus/values.yaml")),
+    yamlencode({
+      grafana = {
+        adminPassword = var.grafana_password
+      }
+      alertmanager = {
+        config = {
+          global = {
+            slack_api_url = var.slack_webhook_url
+          }
+        }
+      }
+    })
+  ]
+
+  depends_on = [module.eks]
+}
+
+resource "cloudflare_record" "grafana" {
+  zone_id         = var.cloudflare_zone_id
+  name            = "grafana"
+  content         = data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type            = "CNAME"
+  proxied         = true
+  allow_overwrite = true
+}
+
+resource "cloudflare_record" "prometheus" {
+  zone_id         = var.cloudflare_zone_id
+  name            = "prometheus"
+  content         = data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type            = "CNAME"
+  proxied         = true
+  allow_overwrite = true
+}
