@@ -11,7 +11,7 @@ api:
   resources:
     requests:
       cpu: "250m"
-      memory: "256Mi"
+      memory: "384Mi"
     limits:
       cpu: "500m"
       memory: "512Mi"
