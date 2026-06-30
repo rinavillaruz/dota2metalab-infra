@@ -1,0 +1,44 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: dota2metalab-alerts
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  groups:
+    - name: dota2metalab.rules
+      rules:
+        - alert: PodCrashLooping
+          expr: rate(kube_pod_container_status_restarts_total{namespace=~"dota2metalab-.*"}[15m]) > 0
+          for: 5m
+          labels:
+            severity: critical
+          annotations:
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} is crash looping"
+
+        - alert: HighMemoryUsage
+          expr: |
+            (container_memory_working_set_bytes{namespace=~"dota2metalab-.*"} 
+            / container_spec_memory_limit_bytes{namespace=~"dota2metalab-.*"}) > 0.9
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} memory usage above 90% of limit"
+
+        - alert: PodNotReady
+          expr: kube_pod_status_ready{namespace=~"dota2metalab-.*", condition="false"} == 1
+          for: 10m
+          labels:
+            severity: critical
+          annotations:
+            description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} not ready for over 10 minutes"
+
+        - alert: TrainerJobFailed
+          expr: kube_job_status_failed{namespace=~"dota2metalab-.*", job_name=~".*trainer.*"} > 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            description: "Trainer job failed in {{ $labels.namespace }}"

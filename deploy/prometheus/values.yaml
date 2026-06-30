@@ -8,6 +8,11 @@ alertmanager:
       limits:
         memory: "128Mi"
         cpu: "100m"
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - alertmanager.dota2metalab.com
   config:
     global:
       slack_api_url: "SLACK_WEBHOOK_PLACEHOLDER"
@@ -42,6 +47,14 @@ grafana:
 
 prometheus:
   prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: gp3
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
     resources:
       requests:
         memory: "384Mi"

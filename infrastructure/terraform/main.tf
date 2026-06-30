@@ -557,3 +557,18 @@ resource "cloudflare_record" "prometheus" {
   proxied         = true
   allow_overwrite = true
 }
+
+resource "kubectl_manifest" "dota2metalab_alerts" {
+  yaml_body = file(abspath("${path.module}/../../deploy/prometheus/alerts.yaml"))
+  depends_on = [helm_release.prometheus]
+}
+
+resource "cloudflare_record" "alertmanager" {
+  zone_id         = var.cloudflare_zone_id
+  name            = "alertmanager"
+  content         = data.kubernetes_service_v1.ingress_nginx.status.0.load_balancer.0.ingress.0.hostname
+  type            = "CNAME"
+  proxied         = true
+  allow_overwrite = true
+}
+
