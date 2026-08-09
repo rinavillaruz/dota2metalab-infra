@@ -17,6 +17,9 @@ spec:
         rollme: {{ randAlphaNum 5 | quote }}
       labels:
         app: dota2metalab-api
+        {{- if eq .Values.cloud "azure" }}
+        azure.workload.identity/use: "true"
+        {{- end }}
     spec:
       serviceAccountName: dota2metalab-api
       containers:
@@ -30,10 +33,23 @@ spec:
               value: mongodb://mongodb:{{ .Values.mongodb.port }}
             - name: PYTHONPATH
               value: /app
+            {{- if eq .Values.cloud "azure" }}
+            - name: STORAGE_BACKEND
+              value: azure
+            - name: AZURE_STORAGE_ACCOUNT
+              value: {{ .Values.azureStorage.account }}
+            - name: AZURE_STORAGE_CONTAINER
+              value: {{ .Values.azureStorage.container }}
+            - name: S3_PREFIX
+              value: {{ .Values.azureStorage.prefix }}
+            {{- else }}
+            - name: STORAGE_BACKEND
+              value: s3
             - name: S3_BUCKET
               value: {{ .Values.s3.bucket }}
             - name: S3_PREFIX
               value: {{ .Values.s3.prefix }}
+            {{- end }}
           resources:
             requests:
               cpu: {{ .Values.api.resources.requests.cpu | quote }}

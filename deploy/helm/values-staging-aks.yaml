@@ -1,0 +1,17 @@
+cloud: azure
+
+ingress:
+  enabled: true
+  host: azure-staging.dota2metalab.com
+
+mongodb:
+  persistence:
+    storageClassName: managed-premium-v2
+
+azureStorage:
+  account: dota2metalabmodels
+  container: models
+  prefix: models/staging
+
+azureIdentity:
+  clientId: "71c0ab49-6148-448e-9813-9530d5f24eae"

@@ -2,6 +2,13 @@
 global:
   namespace: dota2metalab
 
+# Which cloud's resources this release targets: "aws" (default, EKS)
+# or "azure" (AKS). Controls ServiceAccount identity annotation and
+# model storage backend - see templates/service-accounts.yaml,
+# templates/api-deployment.yaml, templates/trainer-job.yaml.
+# Set to "azure" only via values-*-aks.yaml overrides.
+cloud: aws
+
 # Image settings
 image:
   repository: rinavillaruz/dota2metalab

@@ -1,0 +1,19 @@
+cloud: azure
+
+# Independent secondary deployment - own hostname, not sharing
+# traffic with the EKS/dota2metalab.com production site.
+ingress:
+  enabled: true
+  host: azure.dota2metalab.com
+
+mongodb:
+  persistence:
+    storageClassName: managed-premium-v2
+
+azureStorage:
+  account: dota2metalabmodels
+  container: models
+  prefix: models/prod
+
+azureIdentity:
+  clientId: "71c0ab49-6148-448e-9813-9530d5f24eae"
